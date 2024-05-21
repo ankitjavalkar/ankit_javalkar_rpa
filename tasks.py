@@ -24,7 +24,7 @@ logger = logging.getLogger()
 opts = FirefoxOptions()
 opts.add_argument("--headless")
 driver = webdriver.Firefox(options=opts)
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 60)
 
 
 DURATION = 0
