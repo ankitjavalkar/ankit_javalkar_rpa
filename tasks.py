@@ -10,6 +10,7 @@ from robocorp.tasks import task
 
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
+from selenium.webdriver.chrome.options import Options
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -21,9 +22,18 @@ from selenium.common.exceptions import NoSuchElementException
 logger = logging.getLogger()
 
 
-opts = FirefoxOptions()
-opts.add_argument("--headless")
-driver = webdriver.Firefox(options=opts)
+# opts = FirefoxOptions()
+# opts.add_argument("--headless")
+# driver = webdriver.Firefox(options=opts)
+
+chrome_options = Options()
+# chrome_options.add_argument("--disable-extensions")
+# chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox") # linux only
+chrome_options.add_argument("--headless=new") # for Chrome >= 109
+# chrome_options.add_argument("--headless")
+driver = webdriver.Chrome(options=chrome_options)
+
 wait = WebDriverWait(driver, 60)
 
 
