@@ -9,6 +9,8 @@ import os
 from robocorp.tasks import task
 
 from selenium import webdriver
+from selenium.webdriver import FirefoxOptions
+
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,7 +21,9 @@ from selenium.common.exceptions import NoSuchElementException
 logger = logging.getLogger()
 
 
-driver = webdriver.Firefox()
+opts = FirefoxOptions()
+opts.add_argument("--headless")
+driver = webdriver.Firefox(options=opts)
 wait = WebDriverWait(driver, 10)
 
 
@@ -32,7 +36,6 @@ URL = "https://www.reuters.com/"
 def gather_news_task():
     driver.get(URL)
     run_search_query(driver, QUERY)
-    get_screen(driver)
 
     data_row = []
     articles_are_in_date_range = True
@@ -45,6 +48,7 @@ def gather_news_task():
             )
         )
 
+        print(f"Number of articles found on page: {len(article_elems)}")
         logger.info(f"Number of articles found on page: {len(article_elems)}")
 
         # Iterate over every article in the page
@@ -87,6 +91,7 @@ def gather_news_task():
                     'query_count': query_count_in_title,
                 }
             )
+            print(f"Data rrr: {elem_title} ==== {elem_time} ===== {elem_image_url} ===== {local_path}")
 
         # Hit pagination next
         try:
@@ -120,9 +125,6 @@ def run_search_query(driver, query):
             (By.CSS_SELECTOR, 'input[data-testid="FormField:input"')
         )
     ).send_keys(query + u'\ue007')
-
-def get_screen(driver):
-    driver.save_screenshot('screen1.png')
 
 def get_time_duration(duration_id):
     duration = duration_id if duration_id == 0 else duration_id - 1
